@@ -1,0 +1,7 @@
+RESENHA.pdf
+*.docx
+*.exe
+**/hibernate.cfg.xml
+**/applicationContext.xml
+hibernate-release-5.6.2.Final/project/*
+hibernate-release-5.6.2.Final/documentation/*

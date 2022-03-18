@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:sec="http://www.springframework.org/security/facelets/tags"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+>
+    <ui:composition>
+        <sec:ifAnyGranted roles="ROLE_USUARIO, ROLE_USUARIOVIP">
+            <h:form id="menu">
+                <div style="width: 100%; flex-direction: row; display: flex; justify-content: space-between">
+                    <div>
+                        <p:menuButton value="Cadastrar">
+                            <p:menuitem value="Produto" url="/Logado/produto.jsf"/>
+                            <p:menuitem value="Fornecedor" url="/Logado/fornecedor.jsf"/>
+                        </p:menuButton>
+                    </div>
+                    <div>
+                        <sec:ifAnyGranted roles="ROLE_ADMINISTRADOR">
+                            <h:commandLink action="/Admin/principal" title="Administrativo">
+                                <h:graphicImage library="imagens" name="administrativo16.png"/>
+                            </h:commandLink>
+                        </sec:ifAnyGranted>
+                        <h:commandLink action="/Logado/principal" title="Principal">
+                            <h:graphicImage library="imagens" name="principal16.png"/>
+                        </h:commandLink>
+                        <h:outputLink 
+                            value="javascript:void(0)" 
+                            onclick="document.location = '#{request.contextPath}/j_spring_security_logout'"
+                            title="Sair"
+                        >
+                            <h:graphicImage library="imagens" name="logout16.png"/>
+                        </h:outputLink>
+                    </div>
+                </div>
+            </h:form>
+        </sec:ifAnyGranted>
+    </ui:composition>
+</html>

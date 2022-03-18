@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:sec="http://www.springframework.org/security/facelets/tags"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+>
+    <ui:composition template="/Templates/interna.xhtml">
+        <ui:define name="titulo">
+            Cadastro de Produtos
+        </ui:define>
+        <ui:define name="corpo">
+            <h:form id="listagem">
+                <p:dataTable 
+                    emptyMessage="Sem produtos cadastrados!" 
+                    value="#{produtoBean.lista}"
+                    var="produto"
+                >
+                    <f:facet name="header">Listagem de Produtos</f:facet>
+                    
+                    <!-- Nome do Produto -->
+                    <p:column filterBy="none">
+                        <f:facet name="header">Produto</f:facet>
+                        #{produto.nome}
+                    </p:column>
+                    
+                    <!-- Quantidade -->
+                    <p:column filterBy="#{produto.quantidade}">
+                        <f:facet name="header">Qnt.</f:facet>
+                        #{produto.quantidade}
+                    </p:column>
+                    
+                    <!-- Preço -->
+                    <p:column filterBy="#{produto.preco}">
+                        <f:facet name="header">Valor</f:facet>
+                        <h:outputText value="R$ #{produto.preco}">
+                            <f:convertNumber type="currency" minFractionDigits="2" maxFractionDigits="2"/>
+                        </h:outputText>
+                    </p:column>
+                    
+                    <!-- Editar -->
+                    <sec:ifAnyGranted roles="ROLE_ADMINISTRADOR, ROLE_USUARIOVIP">
+                        <p:column>
+                            <f:facet name="header">Editar</f:facet>
+                            <h:commandLink>
+                                <f:ajax execute="@this" render=":listagem :edicao"/>
+                                <h:graphicImage library="imagens" name="editar16.png"/>
+                                <f:setPropertyActionListener target="#{produtoBean.produto}" value="#{produto}"/>
+                            </h:commandLink>
+                        </p:column>
+                    </sec:ifAnyGranted>
+                    
+                    <!-- Excluir -->
+                    <sec:ifAnyGranted roles="ROLE_ADMINISTRADOR, ROLE_USUARIOVIP">
+                        <p:column>
+                            <f:facet name="header">Excluir</f:facet>
+                            <h:commandLink 
+                                action="#{produtoBean.excluir()}"
+                                onclick="if(!confirm('Confirma a exclusão do produto: #{produto.nome}?')) return false;"
+                            >
+                                <f:ajax execute="@this" render=":listagem :edicao"/>
+                                <h:graphicImage library="imagens" name="excluir16.png"/>
+                                <f:setPropertyActionListener target="#{produtoBean.produto}" value="#{produto}"/>
+                            </h:commandLink>
+                        </p:column>
+                    </sec:ifAnyGranted>
+                </p:dataTable>
+            </h:form>
+            
+            <br/>
+            <hr/>
+            <br/>
+            
+            <h:form id="edicao">
+                <h:inputHidden value="#{produtoBean.produto.cod_produto}"/>
+                Cadastro de Produtos
+                <p:panelGrid columns="2">
+                    <p:outputLabel for="nome" value="Nome: "/>
+                    <p:inputText 
+                        id="nome" 
+                        label="nome do produto" 
+                        value="#{produtoBean.produto.nome}" 
+                        maxlength="100"
+                        required="true"
+                        requiredMessage="Por favor insira um nome para o seu produto!"
+                    />
+                    <p:outputLabel for="qtd" value="Quantidade: "/>
+                    <p:spinner 
+                        id="qtd"
+                        label="0"
+                        value="#{produtoBean.produto.quantidade}"
+                        required="true"
+                        requiredMessage="Por favor insira a quantidade desejada!"
+                    />
+                    <p:outputLabel for="preco" value="Preço: "/>
+                    <p:inputText 
+                        id="preco" 
+                        label="R$ 0,00" 
+                        value="#{produtoBean.produto.preco}" 
+                        size="20"
+                        required="true"
+                        requiredMessage="Por favor insira o valor do produto!"
+                    >
+                        <f:convertNumber type="currency" minFractionDigits="2" maxFractionDigits="2"/>
+                    </p:inputText>
+                </p:panelGrid>
+                <br/>
+                
+                <p:button value="Voltar" outcome="principal" style="margin-right: 10px"/>
+                <p:commandButton action="#{produtoBean.salvar()}" value="Salvar" style="margin-right: 10px" update=":edicao :listagem"/>
+                
+                <p:growl id="aviso" showDetail="true" showSummary="true"/>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:p="http://primefaces.org/ui"
+    xmlns:sec="http://www.springframework.org/security/facelets/tags"
+    xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+>
+    <ui:composition template="/Templates/interna.xhtml">
+        <ui:define name="titulo">
+            Cadastro de Fornecedores
+        </ui:define>
+        <ui:define name="corpo">
+            <p:accordionPanel activeIndex="-1" id="paineis" multiple="true" widgetVar="paineisWV">
+                <p:tab title="Lista de fornecedores">
+                    <h:form id="listagem">
+                        
+                        <p:growl id="aviso" showDetail="true"/>
+                        <p:dataTable 
+                            emptyMessage="Sem produtos cadastrados!" 
+                            value="#{fornecedorBean.lista}"
+                            var="fornecedor"
+                            tableStyle="width: 100%;"
+                        >
+                            <f:facet name="header">Listagem de Fornecedores</f:facet>
+
+                            <!-- Nome do fornecedor -->
+                            <p:column>
+                                <f:facet name="header">Nome</f:facet>
+                                #{fornecedor.nome}
+                            </p:column>
+
+                            <!-- CNPJ -->
+                            <p:column>
+                                <f:facet name="header">CNPJ</f:facet>
+                                #{fornecedor.cnpj}
+                            </p:column>
+
+                            <!-- Telefone -->
+                            <p:column>
+                                <f:facet name="header">Telefone</f:facet>
+                                #{fornecedor.telefone}
+                            </p:column>
+                            
+                            <!-- Email -->
+                            <p:column>
+                                <f:facet name="header">Email</f:facet>
+                                #{fornecedor.email}
+                            </p:column>
+                            
+                            <!-- Data de Cadastro -->
+                            <p:column>
+                                <f:facet name="header">Data de Cadastro</f:facet>
+                                #{fornecedor.data_cad}
+                            </p:column>
+                            
+                            <!-- Endereço -->
+                            <p:column>
+                                <f:facet name="header">Endereço</f:facet>
+                                #{fornecedor.endereco}
+                            </p:column>
+                            
+                            <!-- Editar -->
+                            <sec:ifAnyGranted roles="ROLE_ADMINISTRADOR, ROLE_USUARIOVIP">
+                                <p:column>
+                                    <f:facet name="header">Editar</f:facet>
+                                    <h:commandLink>
+                                        <f:ajax execute="@this" render=":edicao"/>
+                                        <h:graphicImage library="imagens" name="editar16.png"/>
+                                        <f:setPropertyActionListener target="#{fornecedorBean.fornecedor}" value="#{fornecedor}"/>
+                                    </h:commandLink>
+                                </p:column>
+                            </sec:ifAnyGranted>
+
+                            <!-- Excluir -->
+                            <sec:ifAnyGranted roles="ROLE_ADMINISTRADOR, ROLE_USUARIOVIP">
+                                <p:column>
+                                    <f:facet name="header">Excluir</f:facet>
+                                    <h:commandLink 
+                                        action="#{fornecedorBean.excluir()}"
+                                        onclick="if(!confirm('Confirma a exclusão do produto: #{fornecedor.nome}?')) return false;"
+                                    >
+                                        <f:ajax execute="@this" render=":paineis :edicao"/>
+                                        <h:graphicImage library="imagens" name="excluir16.png"/>
+                                        <f:setPropertyActionListener target="#{fornecedorBean.fornecedor}" value="#{fornecedor}"/>
+                                    </h:commandLink>
+                                </p:column>
+                            </sec:ifAnyGranted>
+                        </p:dataTable>
+                    </h:form>
+                </p:tab>
+            </p:accordionPanel>
+            
+            <br/>
+            <hr/>
+            <br/>
+            
+            <h:form id="edicao">
+                
+                <h:inputHidden value="#{fornecedorBean.fornecedor.cod_forn}"/>
+                <h:inputHidden value="#{fornecedorBean.fornecedor.data_cad}"/>
+                Cadastro de Fornecedor
+                <p:panelGrid columns="2">
+                    <p:outputLabel for="nome" value="Nome: "/>
+                    <p:inputText 
+                        id="nome" 
+                        label="Nome do fornecedor" 
+                        value="#{fornecedorBean.fornecedor.nome}" 
+                        maxlength="100"
+                        required="true"
+                        requiredMessage="Por favor insira um nome para o seu fornecedor!"
+                    />
+                    <p:outputLabel for="cnpj" value="CNPJ: "/>
+                    <p:inputMask
+                        id="cnpj"
+                        value="#{fornecedorBean.fornecedor.cnpj}"
+                        mask="99.999.999/9999-99"
+                        maxlength="18"
+                        required="true"
+                        requiredMessage="Por favor insira o cnpj do fornecedor!"
+                    />
+                    <p:outputLabel for="telefone" value="Telefone: "/>
+                    <p:inputMask 
+                        id="telefone" 
+                        mask="(999) 99999-9999" 
+                        value="#{fornecedorBean.fornecedor.telefone}" 
+                        maxlength="16"
+                        required="true"
+                        requiredMessage="Por favor insira o telefone do cliente!"
+                    />
+                    <p:outputLabel for="email" value="Email "/>
+                    <p:inputText 
+                        id="email" 
+                        label="Email do fornecedor" 
+                        value="#{fornecedorBean.fornecedor.email}" 
+                        maxlength="100"
+                        required="true"
+                        requiredMessage="Por favor insira um nome para o seu fornecedor!"
+                    >
+                        <f:validateRegex pattern="[a-zA-Z0-9\-\_\.]+@[a-zA-Z0-9\-\_\.]+"/>
+                    </p:inputText>
+                    <p:outputLabel for="endereco" value="Endereco: "/>
+                    <p:inputText 
+                        id="endereco" 
+                        label="Endereco do fornecedor" 
+                        value="#{fornecedorBean.fornecedor.endereco}" 
+                        maxlength="100"
+                        required="true"
+                        requiredMessage="Por favor insira o endereço do fornecedor!"
+                    />
+                </p:panelGrid>
+                <br/>
+                
+                <p:button value="Voltar" outcome="principal" style="margin-right: 10px"/>
+                <p:commandButton action="#{fornecedorBean.salvar()}" value="Salvar" style="margin-right: 10px" update=":edicao :paineis"/>
+            </h:form>
+        </ui:define>
+    </ui:composition>
+</html>

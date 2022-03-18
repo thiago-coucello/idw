@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html 
+    xmlns="http://www.w3.org/1999/xhtml"
+    xmlns:h="http://xmlns.jcp.org/jsf/html"
+    xmlns:f="http://xmlns.jcp.org/jsf/core"
+>
+    <h:head>
+        <title>Cadastro de Usuários</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </h:head>
+    <h:body>
+        <h1>Cadastro de Usuários</h1>
+        <h:form>
+            <h:messages/>
+            <h:inputHidden value="#{usuarioBean.usuario.codigo}"/>
+            <h:inputHidden value="#{usuarioBean.usuario.ativo}"/>
+            <h:inputHidden value="#{usuarioBean.destinoSalvar}"/>
+            <h:panelGrid columns="3">
+                <!-- Nome -->
+                <h:outputLabel value="Nome: " for="nome"/>
+                <h:inputText 
+                    id="nome" 
+                    label="Nome" 
+                    value="#{usuarioBean.usuario.nome}" 
+                    size="30" 
+                    maxlength="30" 
+                    required="true" 
+                    requiredMessage="Você não tem nome" 
+                >
+                    <f:validateLength minimum="10" maximum="30"/>
+                </h:inputText>
+                
+                <!-- Email -->
+                <h:outputLabel value="E-mail: " for="email"/>
+                <h:panelGroup>
+                    <h:inputText 
+                        id="email" 
+                        label="Email" 
+                        value="#{usuarioBean.usuario.email}" 
+                        size="50" 
+                        maxlength="50" 
+                        required="true" 
+                        requiredMessage="E-mail inválido" 
+                    >
+                        <f:validateRegex pattern="[a-zA-Z0-9\-\_\.]+@[a-zA-Z0-9\-\_\.]+"/>
+                    </h:inputText>
+                    <h:message for="email"/>
+                </h:panelGroup>
+                
+                <!-- Celular -->
+                <h:outputLabel value="Celular: " for="celular"/>
+                <h:inputText 
+                    id="celular" 
+                    label="Celular" 
+                    value="#{usuarioBean.usuario.celular}" 
+                    size="10" 
+                />
+                
+                <!-- Data -->
+                <h:outputLabel value="Data nascimento: " for="nascimento"/>
+                <h:inputText 
+                    id="nascimento" 
+                    label="Data Nascimento" 
+                    value="#{usuarioBean.usuario.nascimento}" 
+                    size="10" 
+                    maxlength="10" 
+                    required="true"
+                >
+                    <f:convertDateTime dateStyle="medium"/>
+                </h:inputText>
+                
+                <!-- Login -->
+                <h:outputLabel value="Login:  " for="login"/>
+                <h:inputText 
+                    id="login" 
+                    label="Login" 
+                    value="#{usuarioBean.usuario.login}" 
+                    size="15" 
+                    maxlength="15" 
+                    required="true" 
+                    requiredMessage="Login deve ter no mínimo 5 e no máximo 15 caracteres e só pode conter os símbols '.' e '_'." 
+                >
+                    <f:validateRegex pattern="([a-z]|[0-9]|[.]|[_]){5,15}"/>
+                </h:inputText>
+                
+                <!-- Senha -->
+                <h:outputLabel value="Senha: " for="senha"/>
+                <h:inputSecret 
+                    id="senha" 
+                    label="Senha" 
+                    value="#{usuarioBean.usuario.senha}" 
+                    size="10" 
+                    maxlength="10" 
+                    required="true" 
+                    redisplay="true"
+                />
+                
+                <!-- Confirma Senha -->
+                <h:outputLabel value="Confirmar Senha: " for="confirmarsenha"/>
+                <h:inputSecret 
+                    id="confirmarsenha" 
+                    label="Confirmar Senha" 
+                    value="#{usuarioBean.confirmarSenha}" 
+                    size="10" 
+                    maxlength="10" 
+                    required="true" 
+                    redisplay="true"
+                />
+            </h:panelGrid>
+            <a href="#{usuarioBean.destinoRetorno}" style="margin-right: .5rem">Voltar</a>
+            <h:commandButton action="#{usuarioBean.salvar()}" value="Salvar"/>
+        </h:form>
+    </h:body>
+</html>

@@ -1,0 +1,72 @@
+body, td, th {
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-size: 12px;
+}
+
+th {
+    background: url(#{resource["imagens:fundo_claro.png"]});
+min-height: 25px;
+padding: 3px;
+}
+
+img {
+    border:0px;
+}
+
+#container {
+    width: 990px;
+    height: 100%;
+    margin: 0 auto
+}
+
+#titulo {
+    text-align: center;
+    margin: 10px 0 10px 0;
+    font-size: 25pt;
+    font-variant: small-caps;
+    font-weight: bold;
+}
+
+#barra_menu {
+    background: linear-gradient(to right,#102693, #3366FF);
+    min-height: 13px;
+    padding: 5px;
+    border-radius: 10px;
+}
+
+#corpo {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    min-height: 300px;
+}
+
+#rodape {
+    background: url(#{resource["imagens:fundo_barra_rodape.png"]}) repeat-x;
+    height: 100px;
+    margin-top: 5px;
+    padding: 10px;
+    text-align: center;
+}
+
+#logotipo {
+    justify-content: center;
+}
+
+.info {
+    font-weight: bold;
+    color: green;
+}
+
+.warn {
+    font-weight: bold;
+    color: #FFCC00;
+}
+
+.fatal, .error {
+    font-weight: bold;
+    color: red;
+}
+
+.ui-stack {
+    z-index: 1000;
+}
